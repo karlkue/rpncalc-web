@@ -1,0 +1,8 @@
+﻿# Source / legacy project directory
+rpncalc-source/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
