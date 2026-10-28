@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rpn-calc-v6';
+const CACHE_NAME = 'rpn-calc-v9';
 const ASSETS = [
   './',
   './index.html',

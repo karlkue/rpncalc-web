@@ -108,33 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let activeMobileTab = 'basic';
-
-    function setMobileKeypadTab(tabName) {
-        activeMobileTab = tabName;
-        document.querySelectorAll('.mobile-keypad-tabs .k-tab').forEach(tab => {
-            tab.classList.toggle('active', tab.dataset.ktab === tabName);
-        });
-
-        const keypadFull = document.getElementById('keypadFull');
-        const keypadBasic = document.getElementById('keypadBasic');
-        const keypadSci = document.getElementById('keypadSci');
-        const keypadHex = document.getElementById('keypadHex');
-
-        if (keypadFull) keypadFull.classList.toggle('active', tabName === 'full');
-        if (keypadBasic) keypadBasic.classList.toggle('active', tabName === 'basic');
-        if (keypadSci) keypadSci.classList.toggle('active', tabName === 'sci');
-        if (keypadHex) keypadHex.classList.toggle('active', tabName === 'hex');
-    }
-
     function init() {
         loadSettings();
         setupEventListeners();
         setupResizeGrip();
-        setMobileKeypadTab('basic');
         updateUI();
         
-        // Auto-scroll stack to bottom when window or container is resized
+        // Auto-scroll stack to bottom and maintain fixed desktop width
+        window.addEventListener('resize', () => {
+            if (stackContainer) {
+                stackContainer.scrollTop = stackContainer.scrollHeight;
+            }
+        });
+
         if (window.ResizeObserver && stackContainer) {
             const ro = new ResizeObserver(() => {
                 stackContainer.scrollTop = stackContainer.scrollHeight;
@@ -290,18 +276,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Hyp button state on all keypads
-        document.querySelectorAll('.hyp-toggle-btn').forEach(btn => {
-            btn.classList.toggle('checked', engine.isHyperbolic);
-        });
+        // Hyp button state
+        const hypBtn = document.getElementById('hypBtn');
+        if (hypBtn) hypBtn.classList.toggle('checked', engine.isHyperbolic);
 
-        // Trig button labels for Hyperbolic mode across all active keypads
-        document.querySelectorAll('.trig-sin').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'sinh' : 'sin'; });
-        document.querySelectorAll('.trig-cos').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'cosh' : 'cos'; });
-        document.querySelectorAll('.trig-tan').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'tanh' : 'tan'; });
-        document.querySelectorAll('.trig-asin').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'arsinh' : 'asin'; });
-        document.querySelectorAll('.trig-acos').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'arcosh' : 'acos'; });
-        document.querySelectorAll('.trig-atan').forEach(btn => { btn.textContent = engine.isHyperbolic ? 'artanh' : 'atan'; });
+        // Trig button labels for Hyperbolic mode
+        const sinBtn = document.getElementById('sinBtn');
+        const cosBtn = document.getElementById('cosBtn');
+        const tanBtn = document.getElementById('tanBtn');
+        const asinBtn = document.getElementById('asinBtn');
+        const acosBtn = document.getElementById('acosBtn');
+        const atanBtn = document.getElementById('atanBtn');
+
+        if (sinBtn) sinBtn.textContent = engine.isHyperbolic ? 'sinh' : 'sin';
+        if (cosBtn) cosBtn.textContent = engine.isHyperbolic ? 'cosh' : 'cos';
+        if (tanBtn) tanBtn.textContent = engine.isHyperbolic ? 'tanh' : 'tan';
+        if (asinBtn) asinBtn.textContent = engine.isHyperbolic ? 'arsinh' : 'asin';
+        if (acosBtn) acosBtn.textContent = engine.isHyperbolic ? 'arcosh' : 'acos';
+        if (atanBtn) atanBtn.textContent = engine.isHyperbolic ? 'artanh' : 'atan';
     }
 
     function showStatus(msg) {
@@ -404,46 +396,40 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Mobile Keypad Tab Switcher Clicks
-        document.querySelectorAll('.mobile-keypad-tabs .k-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                triggerHaptic();
-                setMobileKeypadTab(tab.dataset.ktab);
-            });
-        });
+        // Keypad Section Button Clicks
+        const keypadSection = document.querySelector('.keypad-section');
+        if (keypadSection) {
+            keypadSection.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (!btn || btn.disabled) return;
 
-        // Keypad Section Button Clicks (Delegated for full & adaptive grids)
-        document.querySelector('.keypad-section').addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if (!btn || btn.disabled || btn.classList.contains('k-tab')) return;
-
-            if (btn.dataset.val !== undefined) {
-                appendDigit(btn.dataset.val);
-            } else if (btn.dataset.action === 'enter') {
-                processInputOrCommand(inputDisplay.value);
-            } else if (btn.dataset.action === 'clr') {
-                triggerHaptic();
-                if (inputDisplay.value !== '') {
+                if (btn.dataset.val !== undefined) {
+                    appendDigit(btn.dataset.val);
+                } else if (btn.dataset.action === 'enter') {
+                    processInputOrCommand(inputDisplay.value);
+                } else if (btn.dataset.action === 'clr') {
+                    triggerHaptic();
+                    if (inputDisplay.value !== '') {
+                        inputDisplay.value = '';
+                    } else {
+                        engine.stack.drop();
+                        updateUI();
+                    }
+                } else if (btn.dataset.action === 'cla') {
+                    triggerHaptic();
                     inputDisplay.value = '';
-                } else {
-                    engine.stack.drop();
+                    engine.executeOperation('CLA');
                     updateUI();
+                } else if (btn.dataset.action === 'hyp') {
+                    triggerHaptic();
+                    engine.isHyperbolic = !engine.isHyperbolic;
+                    updateUI();
+                } else if (btn.dataset.op !== undefined) {
+                    handleOperation(btn.dataset.op);
                 }
-            } else if (btn.dataset.action === 'cla') {
-                triggerHaptic();
-                inputDisplay.value = '';
-                engine.executeOperation('CLA');
-                updateUI();
-            } else if (btn.dataset.action === 'hyp') {
-                triggerHaptic();
-                engine.isHyperbolic = !engine.isHyperbolic;
-                updateUI();
-            } else if (btn.dataset.op !== undefined) {
-                handleOperation(btn.dataset.op);
-            }
-
-            inputDisplay.focus();
-        });
+                inputDisplay.focus();
+            });
+        }
 
         // Menu Bar & Quick Header Icon Clicks
         document.querySelectorAll('[data-menu-action]').forEach(item => {
@@ -517,11 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
             processInputOrCommand(inputDisplay.value);
         }
         engine.numberBase = base;
-        if (base === 'HEX' && window.innerWidth < 600) {
-            setMobileKeypadTab('hex');
-        } else if (base !== 'HEX' && activeMobileTab === 'hex') {
-            setMobileKeypadTab('basic');
-        }
         saveSettings();
         updateUI();
     }

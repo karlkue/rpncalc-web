@@ -135,48 +135,42 @@
 }
 
 body {
-    background-color: var(--bg-body);
+    background-color: var(--bg-app);
     min-height: 100vh;
     min-height: -webkit-fill-available;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    overflow-y: auto;
+    overflow: hidden;
     color: #ffffff;
+    margin: 0;
 }
 
-/* --- Calculator Main Card Frame --- */
+/* --- Calculator Main Frame --- */
 .calculator-card {
-    width: 100%;
-    max-width: var(--app-max-width);
-    height: 560px;
-    min-height: 550px;
-    max-height: 96vh;
-    flex-shrink: 0;
+    width: 485px;
+    min-width: 485px;
+    max-width: 485px;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 520px;
     background-color: var(--bg-app);
-    border: 1px solid #222222;
-    border-radius: 8px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    margin: auto;
+    margin: 0 auto;
     position: relative;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 485px) {
     .calculator-card {
-        min-width: 485px;
-    }
-    .mobile-keypad-tabs {
-        display: none !important;
-    }
-    .keypad-full {
-        display: grid !important;
-    }
-    .keypad-adaptive {
-        display: none !important;
+        width: 100vw;
+        min-width: 0;
+        max-width: 100vw;
     }
 }
 
@@ -601,48 +595,12 @@ sub { bottom: -0.25em; }
     text-overflow: ellipsis;
 }
 
-/* --- Mobile Keypad Tabs & Adaptive Layouts --- */
-.mobile-keypad-tabs {
-    display: none;
-    gap: 4px;
-    margin-bottom: 2px;
-}
-
-.k-tab {
-    flex: 1;
-    background: #333333;
-    color: #c5c5c5;
-    border: 1px solid #525252;
-    border-radius: 4px;
-    padding: 6px 2px;
-    font-size: 11.5px;
-    font-weight: 500;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: background 0.1s, color 0.1s;
-}
-
-.k-tab.active {
-    background: linear-gradient(180deg, #0078d7 0%, #005a9e 100%);
-    color: #ffffff;
-    font-weight: bold;
-    border-color: #005a9e;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-.keypad-adaptive {
-    display: none !important;
-}
-
 /* ==========================================================================
    Responsive Adaptations (Mobile Portrait, Landscape, Tablet)
    ========================================================================== */
 
-/* Mobile Portrait (< 600px, e.g. 412x912, 390x844, 375x667) */
+/* Mobile Portrait (< 600px) */
 @media (max-width: 599px) {
-    .keypad-adaptive.active {
-        display: grid !important;
-    }
     body {
         padding: 0;
         align-items: stretch;
@@ -670,7 +628,7 @@ sub { bottom: -0.25em; }
     .app-brand {
         display: inline-block;
         font-size: 13px;
-        color: #444;
+        color: var(--color-header-text);
     }
 
     .hotkey-badge {
@@ -727,65 +685,38 @@ sub { bottom: -0.25em; }
         min-height: 0;
     }
 
-    .mobile-keypad-tabs {
-        display: flex;
-    }
-
-    .keypad-full {
-        display: none;
-    }
-
-    .keypad-full.active {
-        display: grid !important;
+    .keypad-grid {
+        display: grid;
         gap: 2.5px;
         grid-template-columns: repeat(8, minmax(0, 1fr));
         grid-template-rows: repeat(7, clamp(35px, 5.5vh, 46px));
     }
 
-    /* 5-Column Large Touch Target Grid */
-    .keypad-5col {
-        gap: 3.5px;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        grid-template-rows: repeat(6, clamp(44px, 6.2vh, 56px));
-    }
-
     .btn {
-        font-size: clamp(13px, 3.5vw, 16px);
+        font-size: clamp(12.5px, 2.5vw, 15px);
         padding: 0;
-        border-radius: 4px;
-        position: relative;
-    }
-
-    /* Invisible touch padding for zero dead-zones */
-    .btn::before {
-        content: "";
-        position: absolute;
-        top: -2px;
-        bottom: -2px;
-        left: -2px;
-        right: -2px;
-        z-index: 1;
+        border-radius: 3px;
     }
 
     .btn-num {
-        font-size: clamp(16px, 4.5vw, 20px);
+        font-size: clamp(15px, 3.2vw, 18px);
         font-weight: bold;
     }
 
     .btn-text-sm {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .btn-trig {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .btn-symbol-lg {
-        font-size: clamp(17px, 4.5vw, 21px);
+        font-size: 17px;
     }
 
     .enter-btn {
-        font-size: 13.5px;
+        font-size: 13px;
         font-weight: bold;
     }
 
@@ -827,18 +758,6 @@ sub { bottom: -0.25em; }
         display: none;
     }
 
-    .mobile-keypad-tabs {
-        display: none !important;
-    }
-
-    .keypad-full {
-        display: grid !important;
-    }
-
-    .keypad-adaptive {
-        display: none !important;
-    }
-
     .calculator-workspace {
         flex-direction: row;
         flex: 1;
@@ -870,6 +789,7 @@ sub { bottom: -0.25em; }
     }
 
     .keypad-grid {
+        display: grid;
         gap: 2px;
         grid-template-columns: repeat(8, minmax(0, 1fr));
         grid-template-rows: repeat(7, clamp(24px, 11vh, 32px));
