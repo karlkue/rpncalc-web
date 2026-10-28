@@ -200,8 +200,10 @@ body {
     transition: background 0.1s;
 }
 
-.menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+@media (hover: hover) and (pointer: fine) {
+    .menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 }
 
 .dropdown-menu {
@@ -218,8 +220,14 @@ body {
     z-index: 200;
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown.open .dropdown-menu {
     display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
 }
 
 .dropdown-menu button {
@@ -462,8 +470,10 @@ body {
     transition: filter 0.06s, transform 0.06s;
 }
 
-.btn:hover:not(:disabled) {
-    filter: brightness(1.12);
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover:not(:disabled) {
+        filter: brightness(1.12);
+    }
 }
 
 .btn:active:not(:disabled) {

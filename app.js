@@ -28,6 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let errorTimeout = null;
 
+    // Helper: only focus input if on desktop/fine-pointer device (never trigger virtual keyboard on phones)
+    function focusInputIfDesktop() {
+        if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 600) {
+            inputDisplay.focus();
+        }
+    }
+
     // Service Worker Registration for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -128,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ro.observe(stackContainer);
         }
 
-        inputDisplay.focus();
+        focusInputIfDesktop();
     }
 
     function setupResizeGrip() {
@@ -157,19 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
         function onPointerDown(e) {
             if (window.innerWidth < 600) return;
             isDragging = true;
-            startY = e.clientY || (e.touches && e.touches[0].clientY);
+            startY = e.clientY;
             startHeight = card.offsetHeight;
             document.body.style.cursor = 'ns-resize';
             document.body.style.userSelect = 'none';
             window.addEventListener('pointermove', onPointerMove);
             window.addEventListener('pointerup', onPointerUp);
-            window.addEventListener('touchmove', onPointerMove);
-            window.addEventListener('touchend', onPointerUp);
         }
 
         function onPointerMove(e) {
             if (!isDragging) return;
-            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+            const clientY = e.clientY;
             if (clientY === undefined) return;
             const delta = clientY - startY;
             const maxH = Math.floor(window.innerHeight * 0.96);
@@ -187,14 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.style.userSelect = '';
                 window.removeEventListener('pointermove', onPointerMove);
                 window.removeEventListener('pointerup', onPointerUp);
-                window.removeEventListener('touchmove', onPointerMove);
-                window.removeEventListener('touchend', onPointerUp);
                 localStorage.setItem('rpn_card_height', card.offsetHeight.toString());
             }
         }
 
         grip.addEventListener('pointerdown', onPointerDown);
-        grip.addEventListener('touchstart', onPointerDown, { passive: true });
     }
 
     function updateUI() {
@@ -377,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             inputDisplay.value += digit.toUpperCase();
         }
-        inputDisplay.focus();
+        focusInputIfDesktop();
     }
 
     function setupEventListeners() {
@@ -427,13 +429,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (btn.dataset.op !== undefined) {
                     handleOperation(btn.dataset.op);
                 }
-                inputDisplay.focus();
+                focusInputIfDesktop();
             });
         }
+
+        // Menu Bar Dropdown Toggle (supports Touch and Click)
+        const dropdowns = document.querySelectorAll('.desktop-menu .dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', (e) => {
+                const isTargetInsideMenu = e.target.closest('.dropdown-menu');
+                if (isTargetInsideMenu) return; // Allow menu action clicks
+                const wasOpen = dropdown.classList.contains('open');
+                dropdowns.forEach(d => d.classList.remove('open'));
+                if (!wasOpen) dropdown.classList.add('open');
+            });
+        });
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.desktop-menu .dropdown')) {
+                dropdowns.forEach(d => d.classList.remove('open'));
+            }
+        });
 
         // Menu Bar & Quick Header Icon Clicks
         document.querySelectorAll('[data-menu-action]').forEach(item => {
             item.addEventListener('click', () => {
+                dropdowns.forEach(d => d.classList.remove('open'));
                 const action = item.dataset.menuAction;
                 const val = item.dataset.menuValue;
                 handleMenuAction(action, val);
@@ -476,7 +498,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (document.activeElement !== inputDisplay) {
                 if (/^[0-9a-zA-Z.]$/.test(e.key) && !e.ctrlKey && !e.altKey && !e.metaKey) {
-                    inputDisplay.focus();
+                    if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 600) {
+                        inputDisplay.focus();
+                    } else {
+                        // On mobile or touch devices with hardware keyboard: append directly without focusing input
+                        e.preventDefault();
+                        appendDigit(e.key);
+                    }
                 } else if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     processInputOrCommand(inputDisplay.value);
@@ -560,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        inputDisplay.focus();
+        focusInputIfDesktop();
     }
 
     document.querySelectorAll('.modal-close-btn, .modal-close-btn-action, .modal-backdrop').forEach(btn => {
