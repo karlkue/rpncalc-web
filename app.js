@@ -757,7 +757,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateUI();
                 }
             } else if (['+', '-', '*', '/'].includes(e.key)) {
-                if (inputDisplay.value === '' || (!isNaN(engine.parseInput(inputDisplay.value)) && e.key !== '-')) {
+                const val = inputDisplay.value;
+                const isExponentSign = (e.key === '-' || e.key === '+') && /[eE]$/.test(val);
+                if (!isExponentSign && (val === '' || !isNaN(engine.parseInput(val)))) {
                     e.preventDefault();
                     handleOperation(e.key);
                 }
