@@ -1,8 +1,7 @@
 {
   "appId": "com.karlkue.rpncalc",
   "appName": "RPN Calculator",
-  "webDir": ".",
-  "bundledWebRuntime": false,
+  "webDir": "www",
   "backgroundColor": "#09090b",
   "ios": {
     "contentInset": "always",

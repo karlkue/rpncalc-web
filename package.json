@@ -6,8 +6,9 @@
   "scripts": {
     "start": "npx serve . -l 8080",
     "test": "node test.js",
-    "cap:init": "npx cap init \"RPN Calculator\" com.karlkue.rpncalc --web-dir .",
-    "cap:sync": "npx cap sync",
+    "build:www": "mkdir -p www && cp index.html styles.css app.js calculator.js manifest.json sw.js icon.svg favicon.ico www/",
+    "cap:init": "npx cap init \"RPN Calculator\" com.karlkue.rpncalc --web-dir www",
+    "cap:sync": "npm run build:www && npx cap sync",
     "cap:ios": "npx cap open ios",
     "cap:android": "npx cap open android"
   },

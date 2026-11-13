@@ -6,3 +6,7 @@ rpncalc-source/
 Thumbs.db
 Desktop.ini
 
+
+# Node / Capacitor build artifacts
+node_modules/
+www/
