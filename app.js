@@ -982,8 +982,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const isMobileViewport = () => window.innerWidth < 600 || ('ontouchstart' in window && window.innerWidth < 900);
+
+    function syncInputMode() {
+        if (!inputDisplay) return;
+        if (isMobileViewport()) {
+            inputDisplay.setAttribute('inputmode', 'none');
+            inputDisplay.setAttribute('readonly', 'readonly');
+        } else {
+            inputDisplay.removeAttribute('inputmode');
+            inputDisplay.removeAttribute('readonly');
+        }
+    }
+
     function init() {
         loadSettingsAndState();
+        syncInputMode();
+        window.addEventListener('resize', syncInputMode);
         setupEventListeners();
         setupResizeGrip();
         setMobileKeypadTab('basic');
@@ -996,7 +1011,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ro.observe(stackContainer);
         }
 
-        inputDisplay.focus();
+        if (!isMobileViewport()) {
+            inputDisplay.focus();
+        }
     }
 
     init();

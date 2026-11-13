@@ -905,6 +905,9 @@ sub { bottom: -0.22em; }
    ========================================================================== */
 
 @media (max-width: 599px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
     .keypad-adaptive.active {
         display: grid !important;
     }
