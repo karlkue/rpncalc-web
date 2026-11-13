@@ -1,0 +1,35 @@
+{
+  "name": "rpncalc-web",
+  "version": "2.0.0",
+  "description": "Precision Reverse Polish Notation (RPN) Scientific & Engineering Calculator (Web & Capacitor Native iOS/Android/macOS)",
+  "main": "calculator.js",
+  "scripts": {
+    "start": "npx serve . -l 8080",
+    "test": "node test.js",
+    "cap:init": "npx cap init \"RPN Calculator\" com.karlkue.rpncalc --web-dir .",
+    "cap:sync": "npx cap sync",
+    "cap:ios": "npx cap open ios",
+    "cap:android": "npx cap open android"
+  },
+  "keywords": [
+    "rpn",
+    "calculator",
+    "scientific-calculator",
+    "reverse-polish-notation",
+    "hp48",
+    "capacitor",
+    "pwa"
+  ],
+  "author": "Karl Kue",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}

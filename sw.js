@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rpn-calc-v6';
+const CACHE_NAME = 'rpn-calc-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   './calculator.js',
   './app.js',
   './manifest.json',
+  './icon.svg',
   './favicon.ico'
 ];
 

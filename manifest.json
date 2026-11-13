@@ -1,13 +1,20 @@
 {
-  "name": "RPN Calculator",
+  "name": "RPN Scientific Calculator Pro",
   "short_name": "RPN Calc",
-  "description": "Scientific Reverse Polish Notation Calculator with multi-base and trigonometry support.",
+  "description": "Precision Reverse Polish Notation (RPN) scientific & engineering calculator with multi-level undo, interactive stack registers, and multi-base arithmetic.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#2b2b2b",
-  "theme_color": "#484848",
+  "background_color": "#09090b",
+  "theme_color": "#18181b",
   "orientation": "any",
+  "categories": ["utilities", "productivity", "education", "finance"],
   "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",

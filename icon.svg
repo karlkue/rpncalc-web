@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#27272a"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="lcd" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="enter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="key" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3f3f46"/>
+      <stop offset="100%" stop-color="#27272a"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer Case -->
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="url(#bg)" stroke="#3f3f46" stroke-width="8"/>
+  <!-- LCD Stack Screen -->
+  <rect x="56" y="56" width="400" height="172" rx="24" fill="url(#lcd)" stroke="#334155" stroke-width="4"/>
+  <!-- Stack Level 2 (Y:) -->
+  <text x="84" y="114" font-family="monospace" font-size="28" font-weight="bold" fill="#64748b">Y:</text>
+  <text x="424" y="114" font-family="monospace" font-size="30" font-weight="bold" fill="#94a3b8" text-anchor="end">3.14159</text>
+  <!-- Stack Level 1 (X:) -->
+  <text x="84" y="186" font-family="monospace" font-size="34" font-weight="bold" fill="#38bdf8">X:</text>
+  <text x="424" y="186" font-family="monospace" font-size="48" font-weight="bold" fill="#f8fafc" text-anchor="end">42.0000</text>
+  <!-- Keypad Row 1 -->
+  <rect x="56" y="260" width="116" height="84" rx="16" fill="url(#key)" stroke="#52525b" stroke-width="2"/>
+  <text x="114" y="314" font-family="sans-serif" font-size="34" font-weight="bold" fill="#fef08a" text-anchor="middle">yˣ</text>
+  <rect x="192" y="260" width="116" height="84" rx="16" fill="url(#key)" stroke="#52525b" stroke-width="2"/>
+  <text x="250" y="314" font-family="sans-serif" font-size="34" font-weight="bold" fill="#fef08a" text-anchor="middle">SWAP</text>
+  <!-- Keypad Row 2 -->
+  <rect x="56" y="364" width="116" height="84" rx="16" fill="url(#key)" stroke="#52525b" stroke-width="2"/>
+  <text x="114" y="418" font-family="sans-serif" font-size="40" font-weight="bold" fill="#ffffff" text-anchor="middle">+</text>
+  <rect x="192" y="364" width="116" height="84" rx="16" fill="url(#key)" stroke="#52525b" stroke-width="2"/>
+  <text x="250" y="418" font-family="sans-serif" font-size="38" font-weight="bold" fill="#ffffff" text-anchor="middle">×</text>
+  <!-- Tall Enter Key -->
+  <rect x="328" y="260" width="128" height="188" rx="20" fill="url(#enter)" stroke="#fdba74" stroke-width="2"/>
+  <text x="392" y="346" font-family="sans-serif" font-size="28" font-weight="800" fill="#ffffff" text-anchor="middle">ENTER</text>
+  <text x="392" y="394" font-family="sans-serif" font-size="44" font-weight="800" fill="#ffffff" text-anchor="middle">↵</text>
+</svg>

@@ -3,27 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#484848">
+    <meta name="theme-color" content="#18181b">
+    <meta name="description" content="Free ad-free Reverse Polish Notation (RPN) scientific & engineering calculator. Features interactive X/Y/Z/T stack registers, multi-level undo, hex/binary/octal modes, physical constants, and HP 48 heritage themes.">
+    <meta name="keywords" content="RPN calculator, Reverse Polish Notation, scientific calculator online, HP 48 calculator, engineering calculator, hexadecimal calculator, postfix calculator">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>RPN Calculator</title>
+    <meta name="apple-mobile-web-app-title" content="RPN Calc">
+
+    <!-- OpenGraph / Social Discovery -->
+    <meta property="og:title" content="RPN Scientific Calculator — Precision Postfix Instrument">
+    <meta property="og:description" content="100% un-crippled RPN scientific & programmer calculator with persistent stack, multi-level undo, and tactile hardware themes.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="icon.svg">
+
+    <title>RPN Calculator — Precision Scientific & Programmer Instrument</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css?v=6">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="apple-touch-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="icon.svg">
+
+    <!-- Structured Data for Organic Search Funnel -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "RPN Scientific Calculator",
+      "operatingSystem": "Web, iOS, iPadOS, macOS, Android",
+      "applicationCategory": "UtilitiesApplication",
+      "description": "Precision Reverse Polish Notation (RPN) scientific and programmer calculator with persistent X/Y/Z/T stack registers, multi-level undo, and physical constants.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 </head>
 <body>
     <div class="calculator-card">
         <!-- Top App Header / Menu Bar -->
         <header class="app-header">
-            <!-- Desktop Windows Menu -->
-            <nav class="desktop-menu">
+            <!-- Desktop Menu Bar -->
+            <nav class="desktop-menu" aria-label="Application Menu">
                 <div class="menu-item dropdown">
                     <span>Edit</span>
                     <div class="dropdown-menu">
-                        <button data-menu-action="copy-stack">Copy stack</button>
-                        <button data-menu-action="copy-last">Copy last</button>
+                        <button data-menu-action="undo"><span>Undo</span> <kbd>⌘Z</kbd></button>
+                        <button data-menu-action="redo"><span>Redo</span> <kbd>⌘Y</kbd></button>
+                        <div class="dropdown-divider"></div>
+                        <button data-menu-action="copy-last"><span>Copy X register</span> <kbd>⌘C</kbd></button>
+                        <button data-menu-action="copy-stack"><span>Copy full stack</span></button>
                     </div>
                 </div>
 
@@ -33,39 +64,54 @@
                         <button data-menu-action="set-display" data-menu-value="Standard" id="menuDisplayStandard">Standard ✓</button>
                         <button data-menu-action="set-display" data-menu-value="Fixed" id="menuDisplayFixed">Fixed digits</button>
                         <button data-menu-action="set-display" data-menu-value="Scientific" id="menuDisplayScientific">Scientific</button>
-                        <button data-menu-action="set-display" data-menu-value="Grouped" id="menuDisplayGrouped">Grouped</button>
+                        <button data-menu-action="set-display" data-menu-value="Grouped" id="menuDisplayGrouped">Grouped (1,000)</button>
                         <div class="dropdown-divider"></div>
                         <button data-menu-action="show-decimal-modal">Decimal places...</button>
                         <div class="dropdown-divider"></div>
                         <button data-menu-action="set-theme" data-menu-value="dark" id="themeMenuDark">Theme: Dark Pro ✓</button>
                         <button data-menu-action="set-theme" data-menu-value="light" id="themeMenuLight">Theme: HP 48 Heritage</button>
                         <button data-menu-action="set-theme" data-menu-value="classic" id="themeMenuClassic">Theme: Classic 2008</button>
+                        <div class="dropdown-divider"></div>
+                        <button data-menu-action="toggle-sound" id="soundMenuToggle">Key Click Sound: Off</button>
                     </div>
                 </div>
 
                 <div class="menu-item dropdown">
-                    <span>View</span>
+                    <span>Tools</span>
                     <div class="dropdown-menu">
-                        <button data-menu-action="show-log">Calculation log</button>
+                        <button data-menu-action="show-palette"><span>Command &amp; Constants...</span> <kbd>⌘K</kbd></button>
+                        <button data-menu-action="show-log"><span>Calculation Tape</span> <kbd>⌘L</kbd></button>
+                        <div class="dropdown-divider"></div>
+                        <button data-menu-action="exec-op" data-menu-value="SUM"><span>Σ Sum Stack</span></button>
+                        <button data-menu-action="exec-op" data-menu-value="MEAN"><span>x̄ Mean of Stack</span></button>
                     </div>
                 </div>
 
                 <div class="menu-item dropdown">
                     <span>Help</span>
                     <div class="dropdown-menu">
-                        <button data-menu-action="show-about">About RPNCalculator</button>
+                        <button data-menu-action="show-palette"><span>Quick Commands &amp; Constants</span> <kbd>⌘K</kbd></button>
+                        <button data-menu-action="load-demo"><span>Load RPN Demo Stack</span></button>
+                        <div class="dropdown-divider"></div>
+                        <button data-menu-action="show-app-store" class="web-only-promo"><span>📱 Get Native App (iOS / Android)</span></button>
+                        <button data-menu-action="show-about"><span>About &amp; Shortcuts</span></button>
                     </div>
                 </div>
             </nav>
 
-            <!-- App Title & Quick Action Mobile Icons -->
+            <!-- App Title & Quick Action Toolbar -->
             <div class="mobile-header-actions">
-                <span class="app-brand">RPN Calculator</span>
+                <span class="app-brand">RPN Calc</span>
                 <div class="quick-icons">
-                    <button class="icon-btn" data-menu-action="toggle-theme" id="themeToggleBtn" title="Switch Theme (Dark / Light / Classic)">🌓</button>
-                    <button class="icon-btn" data-menu-action="show-log" title="Calculation Log">📋</button>
-                    <button class="icon-btn" data-menu-action="show-decimal-modal" title="Settings">⚙️</button>
-                    <button class="icon-btn" data-menu-action="show-about" title="Help">❓</button>
+                    <button class="promo-pill web-only-promo" data-menu-action="show-app-store" title="Get the Native iOS, Mac &amp; Android App">
+                        <span class="promo-dot"></span>Get App
+                    </button>
+                    <button class="icon-btn" data-menu-action="undo" id="undoHeaderBtn" title="Undo (Ctrl+Z / Cmd+Z)" aria-label="Undo">↶</button>
+                    <button class="icon-btn" data-menu-action="show-palette" title="Commands &amp; Constants (Cmd+K)" aria-label="Command Palette">⌘K</button>
+                    <button class="icon-btn" data-menu-action="show-log" title="Calculation Tape" aria-label="Calculation Tape">📋</button>
+                    <button class="icon-btn" data-menu-action="toggle-sound" id="soundToggleBtn" title="Toggle Mechanical Key Click Sound" aria-label="Toggle Sound">🔇</button>
+                    <button class="icon-btn" data-menu-action="toggle-theme" id="themeToggleBtn" title="Switch Theme (Dark / HP 48 / Classic)" aria-label="Switch Theme">🌓</button>
+                    <button class="icon-btn" data-menu-action="show-about" title="About, Shortcuts &amp; Mobile App" aria-label="About and Help">❓</button>
                 </div>
             </div>
         </header>
@@ -75,25 +121,26 @@
             <!-- Left / Top Display Section -->
             <section class="display-section">
                 <!-- Stack Display Container (LCD Style) -->
-                <div class="stack-viewport" id="stackContainer">
+                <div class="stack-viewport" id="stackContainer" aria-live="polite">
                     <div class="stack-list" id="stackBox"></div>
                 </div>
 
                 <!-- Current Input Entry Bar -->
                 <div class="input-bar">
-                    <input type="text" id="display" class="current-input-field" placeholder="0 or type command (e.g. neg, sin)" autocomplete="off" spellcheck="false" autofocus />
+                    <span class="input-prompt-badge" id="inputPromptBadge" title="Entry buffer or command input">ENTRY</span>
+                    <input type="text" id="display" class="current-input-field" placeholder="Enter value or command (⌘K for list)" autocomplete="off" spellcheck="false" autofocus aria-label="Number or command input" />
                 </div>
 
                 <!-- Segmented Mode Control Bar (Base & Angle) -->
                 <div class="mode-bar">
-                    <div class="segmented-control" id="baseSegmented">
+                    <div class="segmented-control" id="baseSegmented" role="group" aria-label="Number Base">
                         <button class="segment-btn active" data-base="DEC">Dec <span class="hotkey-badge">F5</span></button>
                         <button class="segment-btn" data-base="HEX">Hex <span class="hotkey-badge">F6</span></button>
                         <button class="segment-btn" data-base="BIN">Bin <span class="hotkey-badge">F7</span></button>
                         <button class="segment-btn" data-base="OCT">Oct <span class="hotkey-badge">F8</span></button>
                     </div>
 
-                    <div class="segmented-control" id="angleSegmented">
+                    <div class="segmented-control" id="angleSegmented" role="group" aria-label="Angle Unit">
                         <button class="segment-btn" data-angle="RAD">Rad <span class="hotkey-badge">F9</span></button>
                         <button class="segment-btn active" data-angle="DEG">Deg <span class="hotkey-badge">F10</span></button>
                         <button class="segment-btn" data-angle="GRAD">Grad <span class="hotkey-badge">F11</span></button>
@@ -102,7 +149,6 @@
             </section>
 
             <!-- Right / Bottom Keypad Section (8 Columns x 7 Rows) -->
-            <!-- Right / Bottom Keypad Section -->
             <section class="keypad-section">
                 <!-- Mobile Keypad Tab Switcher (Visible only on mobile portrait) -->
                 <div class="mobile-keypad-tabs" id="mobileKeypadTabs">
@@ -114,19 +160,19 @@
 
                 <!-- 1. Full 8-Column Keypad (Default on Desktop & Landscape) -->
                 <div class="keypad-grid keypad-full" id="keypadFull">
-                    <!-- Row 0: Stack Top Row -->
-                    <div class="grid-spacer col-0 row-0"></div>
-                    <div class="grid-spacer col-1 row-0"></div>
-                    <button class="btn btn-stack col-2 row-0" data-op="ROLL_UP" title="Rotate Up (UP)">↑</button>
-                    <button class="btn btn-stack col-3 row-0" data-op="ROLL_DOWN" title="Rotate Down (DOWN)">↓</button>
-                    <button class="btn btn-stack col-4 row-0 btn-text-sm" data-op="LASTX" title="Last X">Last X</button>
-                    <button class="btn btn-stack col-5 row-0" data-op="SWAP" title="Swap X and Y">Swap</button>
-                    <button class="btn btn-stack col-6 row-0" data-action="clr" title="Clear Top of Stack">CLR</button>
-                    <button class="btn btn-stack col-7 row-0" data-action="cla" title="Clear All Stack">CLA</button>
+                    <!-- Row 0: Stack & Undo Row -->
+                    <button class="btn btn-op col-0 row-0 btn-text-sm" data-op="UNDO" title="Undo last action (⌘Z)">Undo</button>
+                    <button class="btn btn-op col-1 row-0 btn-text-sm" data-action="palette" title="Constants &amp; Commands (⌘K)">Const</button>
+                    <button class="btn btn-stack col-2 row-0" data-op="ROLL_UP" title="Rotate Stack Up">↑</button>
+                    <button class="btn btn-stack col-3 row-0" data-op="ROLL_DOWN" title="Rotate Stack Down">↓</button>
+                    <button class="btn btn-stack col-4 row-0 btn-text-sm" data-op="LASTX" title="Recall Last X">Last X</button>
+                    <button class="btn btn-stack col-5 row-0" data-op="SWAP" title="Swap X and Y (x↔y)">Swap</button>
+                    <button class="btn btn-stack col-6 row-0" data-action="clr" title="Clear Entry / Drop X">CLR</button>
+                    <button class="btn btn-stack col-7 row-0 btn-danger-subtle" data-action="cla" title="Clear All Stack (Undoable with ⌘Z)">CLA</button>
 
                     <!-- Row 1: Scientific & Math Functions -->
                     <button class="btn btn-toggle col-0 row-1 hyp-toggle-btn" data-action="hyp" title="Hyperbolic Toggle">Hyp</button>
-                    <button class="btn btn-op col-1 row-1" data-val="EXP" title="Scientific Exponent">Exp</button>
+                    <button class="btn btn-op col-1 row-1" data-val="EXP" title="Scientific Exponent (E)">Exp</button>
                     <button class="btn btn-op col-2 row-1" data-op="FACT" title="Factorial (x!)">x!</button>
                     <button class="btn btn-num btn-hex col-3 row-1" data-val="A">A</button>
                     <button class="btn btn-op col-4 row-1" data-op="XROOT" title="x root of y"><sup>x</sup>√y</button>
@@ -141,8 +187,8 @@
                     <button class="btn btn-num btn-hex col-3 row-2" data-val="B">B</button>
                     <button class="btn btn-op col-4 row-2" data-op="INV" title="Reciprocal (1/x)">1/x</button>
                     <button class="btn btn-op col-5 row-2" data-op="NEG" title="Negate (±)">±</button>
-                    <button class="btn btn-op col-6 row-2 btn-symbol-lg" data-op="DIV" title="Divide">÷</button>
-                    <button class="btn btn-op col-7 row-2" data-op="MULT" title="Multiply">x</button>
+                    <button class="btn btn-op col-6 row-2 btn-symbol-lg" data-op="DIV" title="Divide (y ÷ x)">÷</button>
+                    <button class="btn btn-op col-7 row-2" data-op="MULT" title="Multiply (y × x)">×</button>
 
                     <!-- Row 3: Inverse Trig & Digits 7,8,9 -->
                     <button class="btn btn-op col-0 row-3 btn-trig trig-asin" data-op="ASIN" title="Arc Sine">asin</button>
@@ -152,7 +198,7 @@
                     <button class="btn btn-num col-4 row-3" data-val="7">7</button>
                     <button class="btn btn-num col-5 row-3" data-val="8">8</button>
                     <button class="btn btn-num col-6 row-3" data-val="9">9</button>
-                    <button class="btn btn-op col-7 row-3 btn-symbol-lg" data-op="SUB" title="Subtract">-</button>
+                    <button class="btn btn-op col-7 row-3 btn-symbol-lg" data-op="SUB" title="Subtract (y − x)">−</button>
 
                     <!-- Row 4: Logarithms & Digits 4,5,6 -->
                     <button class="btn btn-op col-0 row-4" data-op="LOG10" title="Log base 10">log</button>
@@ -162,7 +208,7 @@
                     <button class="btn btn-num col-4 row-4" data-val="4">4</button>
                     <button class="btn btn-num col-5 row-4" data-val="5">5</button>
                     <button class="btn btn-num col-6 row-4" data-val="6">6</button>
-                    <button class="btn btn-op col-7 row-4 btn-symbol-lg" data-op="ADD" title="Add">+</button>
+                    <button class="btn btn-op col-7 row-4 btn-symbol-lg" data-op="ADD" title="Add (y + x)">+</button>
 
                     <!-- Row 5: Powers & Digits 1,2,3 & Enter -->
                     <button class="btn btn-op col-0 row-5" data-op="POW10" title="10^x">10<sup>x</sup></button>
@@ -172,7 +218,7 @@
                     <button class="btn btn-num col-4 row-5" data-val="1">1</button>
                     <button class="btn btn-num col-5 row-5" data-val="2">2</button>
                     <button class="btn btn-num col-6 row-5" data-val="3">3</button>
-                    <button class="btn btn-stack col-7 row-5 enter-btn" data-action="enter" title="Enter / Push to Stack">Enter</button>
+                    <button class="btn btn-stack col-7 row-5 enter-btn" data-action="enter" title="Enter / Push to Stack">Enter ↵</button>
 
                     <!-- Row 6: Constants & Zero / Decimal -->
                     <button class="btn btn-op col-0 row-6" data-op="RAND" title="Random [0, 1)">Rand</button>
@@ -186,11 +232,11 @@
                 <!-- 2. Mobile Large-Target Basic Keypad (5 Columns) -->
                 <div class="keypad-adaptive keypad-5col" id="keypadBasic">
                     <!-- Row 0: Stack Top -->
-                    <button class="btn btn-stack" data-op="LASTX">Last X</button>
+                    <button class="btn btn-op btn-text-sm" data-op="UNDO">Undo</button>
                     <button class="btn btn-stack" data-op="SWAP">Swap</button>
                     <button class="btn btn-stack" data-op="ROLL_UP">↑</button>
                     <button class="btn btn-stack" data-action="clr">CLR</button>
-                    <button class="btn btn-stack" data-action="cla">CLA</button>
+                    <button class="btn btn-stack btn-danger-subtle" data-action="cla">CLA</button>
 
                     <!-- Row 1: Math & Divide -->
                     <button class="btn btn-op" data-op="INV">1/x</button>
@@ -204,14 +250,14 @@
                     <button class="btn btn-num" data-val="7">7</button>
                     <button class="btn btn-num" data-val="8">8</button>
                     <button class="btn btn-num" data-val="9">9</button>
-                    <button class="btn btn-op" data-op="MULT">x</button>
+                    <button class="btn btn-op" data-op="MULT">×</button>
 
                     <!-- Row 3: 4 5 6 Sub -->
-                    <button class="btn btn-op" data-op="FACT">x!</button>
+                    <button class="btn btn-op btn-text-sm" data-op="LASTX">Last X</button>
                     <button class="btn btn-num" data-val="4">4</button>
                     <button class="btn btn-num" data-val="5">5</button>
                     <button class="btn btn-num" data-val="6">6</button>
-                    <button class="btn btn-op btn-symbol-lg" data-op="SUB">-</button>
+                    <button class="btn btn-op btn-symbol-lg" data-op="SUB">−</button>
 
                     <!-- Row 4: 1 2 3 Add -->
                     <button class="btn btn-op" data-val="EXP">Exp</button>
@@ -224,7 +270,7 @@
                     <button class="btn btn-op btn-symbol-pi" data-op="PI">π</button>
                     <button class="btn btn-num" data-val="0" style="grid-column: span 2;">0</button>
                     <button class="btn btn-num" data-val=".">.</button>
-                    <button class="btn btn-stack" data-action="enter" style="font-weight:bold;">Enter</button>
+                    <button class="btn btn-stack" data-action="enter" style="font-weight:bold;">Enter ↵</button>
                 </div>
 
                 <!-- 3. Mobile Scientific Keypad (5 Columns) -->
@@ -253,11 +299,11 @@
                     <button class="btn btn-op" data-op="E">e</button>
                     <button class="btn btn-stack" data-op="LASTX">Last X</button>
 
-                    <button class="btn btn-op" data-op="RAND">Rand</button>
+                    <button class="btn btn-op" data-action="palette">Const</button>
                     <button class="btn btn-op" data-op="FACT">x!</button>
-                    <button class="btn btn-op" data-val="EXP">Exp</button>
+                    <button class="btn btn-op" data-op="SUM">Σ Sum</button>
                     <button class="btn btn-op" data-op="SQRT">√x</button>
-                    <button class="btn btn-stack" data-action="enter" style="font-weight:bold;">Enter</button>
+                    <button class="btn btn-stack" data-action="enter" style="font-weight:bold;">Enter ↵</button>
                 </div>
 
                 <!-- 4. Mobile Hex Keypad (5 Columns) -->
@@ -278,12 +324,12 @@
                     <button class="btn btn-num" data-val="8">8</button>
                     <button class="btn btn-num" data-val="9">9</button>
                     <button class="btn btn-op btn-symbol-lg" data-op="DIV">÷</button>
-                    <button class="btn btn-op" data-op="MULT">x</button>
+                    <button class="btn btn-op" data-op="MULT">×</button>
 
                     <button class="btn btn-num" data-val="4">4</button>
                     <button class="btn btn-num" data-val="5">5</button>
                     <button class="btn btn-num" data-val="6">6</button>
-                    <button class="btn btn-op btn-symbol-lg" data-op="SUB">-</button>
+                    <button class="btn btn-op btn-symbol-lg" data-op="SUB">−</button>
                     <button class="btn btn-op btn-symbol-lg" data-op="ADD">+</button>
 
                     <button class="btn btn-num" data-val="1">1</button>
@@ -294,95 +340,203 @@
 
                     <button class="btn btn-num" data-val="0" style="grid-column: span 2;">0</button>
                     <button class="btn btn-num" data-val=".">.</button>
-                    <button class="btn btn-stack" data-action="enter" style="grid-column: span 2; font-weight:bold;">Enter</button>
+                    <button class="btn btn-stack" data-action="enter" style="grid-column: span 2; font-weight:bold;">Enter ↵</button>
                 </div>
             </section>
         </main>
 
-        <!-- Status Bar -->
+        <!-- Telemetry & Status Bar -->
         <footer class="app-status-bar">
-            <span id="statusBarText" class="status-text"></span>
-            <div class="resize-grip" title="Drag to resize stack vertically"></div>
+            <div class="status-telemetry" id="statusTelemetry">
+                <span class="telemetry-pill" id="telemetryLastX" title="Click to recall Last X">Last X: —</span>
+                <span class="telemetry-pill" id="telemetryDepth">Stack: 0</span>
+            </div>
+            <span id="statusBarText" class="status-text" role="status" aria-live="polite"></span>
+            <div class="resize-grip" title="Drag to resize calculator height"></div>
         </footer>
     </div>
 
-    <!-- Calculation Log Modal -->
-    <div id="logModal" class="modal-overlay">
+    <!-- 1. Interactive Calculation Tape Modal -->
+    <div id="logModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="logModalTitle">
         <div class="modal-backdrop"></div>
         <div class="modal-card">
             <div class="modal-header">
-                <h3>Calculation Log</h3>
-                <button class="modal-close-btn">&times;</button>
+                <div>
+                    <h3 id="logModalTitle">Calculation Tape</h3>
+                    <span class="modal-subtitle">Click any result row to push value back onto stack</span>
+                </div>
+                <button class="modal-close-btn" aria-label="Close">&times;</button>
             </div>
             <div class="modal-body table-responsive">
                 <table class="log-table">
                     <thead>
                         <tr>
                             <th>Time</th>
-                            <th>Operation</th>
+                            <th>Op</th>
                             <th>Operands</th>
-                            <th>Result</th>
+                            <th style="text-align:right;">Result (Click to Push)</th>
                         </tr>
                     </thead>
                     <tbody id="logTableBody"></tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button id="copyLogBtn" class="win-btn">Copy log</button>
-                <button id="clearLogBtn" class="win-btn">Clear log</button>
-                <button class="modal-close-btn-action win-btn win-btn-primary">Close</button>
+                <button id="copyLogBtn" class="ui-btn">Copy Tape</button>
+                <button id="clearLogBtn" class="ui-btn ui-btn-danger-ghost">Clear Tape</button>
+                <button class="modal-close-btn-action ui-btn ui-btn-primary">Done</button>
             </div>
         </div>
     </div>
 
-    <!-- Fixed Digits Modal -->
-    <div id="decimalModal" class="modal-overlay">
-        <div class="modal-backdrop"></div>
-        <div class="modal-card modal-sm">
-            <div class="modal-header">
-                <h3>Fixed Digits</h3>
-                <button class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body" style="padding: 16px;">
-                <p style="margin-bottom: 8px; font-size: 14px;">Number of decimal places (0 - 15):</p>
-                <input type="number" id="decimalPlacesInput" min="0" max="15" value="4" class="win-input" />
-            </div>
-            <div class="modal-footer">
-                <button id="saveDecimalBtn" class="win-btn win-btn-primary">OK</button>
-                <button class="modal-close-btn-action win-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- About & Shortcuts Modal -->
-    <div id="aboutModal" class="modal-overlay">
+    <!-- 2. Command & Physical Constants Palette Modal (⌘K) -->
+    <div id="paletteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="paletteModalTitle">
         <div class="modal-backdrop"></div>
         <div class="modal-card modal-md">
             <div class="modal-header">
-                <h3>About RPN Calculator</h3>
-                <button class="modal-close-btn">&times;</button>
+                <div>
+                    <h3 id="paletteModalTitle">Commands &amp; Physical Constants</h3>
+                    <span class="modal-subtitle">Filter operations or CODATA constants and press Enter</span>
+                </div>
+                <button class="modal-close-btn" aria-label="Close">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 16px; font-size: 13px; line-height: 1.6;">
-                <h4 style="margin-bottom: 4px; color: #0078d7;">RPN Scientific Calculator (Web & Mobile PWA)</h4>
-                <p>Faithful modern recreation of the open-source RPN Calculator for Windows.</p>
-                <hr style="margin: 12px 0; border: 0; border-top: 1px solid #e0e0e0;">
-                <p><strong>Keyboard Shortcuts (Desktop):</strong></p>
-                <ul style="padding-left: 20px; margin-top: 4px;">
-                    <li><strong>F5 - F8:</strong> Base (Dec, Hex, Bin, Oct)</li>
-                    <li><strong>F9 - F11:</strong> Angle (Rad, Deg, Grad)</li>
-                    <li><strong>Enter / Space:</strong> Push to stack / Duplicate</li>
-                    <li><strong>Backspace:</strong> Delete digit / Drop TOS</li>
-                    <li><strong>Escape:</strong> Clear all stack (CLA)</li>
-                    <li><strong>Direct Commands:</strong> Type function names (e.g. <code>neg</code>, <code>sin</code>, <code>cos</code>, <code>swap</code>, <code>drop</code>, <code>sqrt</code>) and press Enter.</li>
-                </ul>
+            <div class="palette-search-bar">
+                <input type="text" id="paletteSearchInput" class="ui-input" placeholder="Search commands or constants (e.g. speed of light, Planck, swap, sum)..." autocomplete="off" />
             </div>
+            <div class="modal-body palette-list" id="paletteList"></div>
             <div class="modal-footer">
-                <button class="modal-close-btn-action win-btn win-btn-primary">Close</button>
+                <span class="modal-hint-text">Tip: You can also type commands directly in the main entry bar</span>
+                <button class="modal-close-btn-action ui-btn">Close</button>
             </div>
         </div>
     </div>
 
-    <script src="calculator.js?v=6"></script>
-    <script src="app.js?v=6"></script>
+    <!-- 3. Fixed Digits Modal -->
+    <div id="decimalModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="decimalModalTitle">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card modal-sm">
+            <div class="modal-header">
+                <h3 id="decimalModalTitle">Display Precision</h3>
+                <button class="modal-close-btn" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <label for="decimalPlacesInput" style="display:block; margin-bottom: 8px; font-size: 13px;">Decimal places for Fixed / Scientific mode (0 – 15):</label>
+                <input type="number" id="decimalPlacesInput" min="0" max="15" value="4" class="ui-input" />
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn-action ui-btn">Cancel</button>
+                <button id="saveDecimalBtn" class="ui-btn ui-btn-primary">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Native App Store & Support Funnel Modal -->
+    <div id="appStoreModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="appStoreModalTitle">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card modal-md">
+            <div class="modal-header">
+                <div>
+                    <h3 id="appStoreModalTitle">RPN Calculator Native Edition</h3>
+                    <span class="modal-subtitle">No subscriptions · 100% offline · Native tactile haptics</span>
+                </div>
+                <button class="modal-close-btn" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 18px;">
+                <div class="store-hero-banner">
+                    <img src="icon.svg" alt="RPN Calculator Icon" class="store-hero-icon" />
+                    <div class="store-hero-copy">
+                        <h4>Pocket &amp; Desktop Hardware Experience</h4>
+                        <p>The web version is 100% free forever with zero ads or feature locks. Get the dedicated native app for instant Dock/Home-screen launch and physical Taptic Engine feedback.</p>
+                    </div>
+                </div>
+
+                <div class="store-features-grid">
+                    <div class="store-feature-item">
+                        <strong>⚡ Physical Taptic Engine</strong>
+                        <span>Real native iOS &amp; Android microswitch haptics on every keystroke.</span>
+                    </div>
+                    <div class="store-feature-item">
+                        <strong>💾 Instant Offline Launch</strong>
+                        <span>Lives in your macOS Dock, iPhone Lock Screen widget, or Android home screen.</span>
+                    </div>
+                    <div class="store-feature-item">
+                        <strong>🔒 One-Time Purchase ($3.99)</strong>
+                        <span>No recurring subscriptions, no tracking, no ads—ever.</span>
+                    </div>
+                </div>
+
+                <div class="store-cta-grid">
+                    <a href="#ios-app-store" id="linkAppStoreIOS" target="_blank" rel="noopener" class="store-badge-btn store-badge-primary">
+                        <span class="store-badge-icon"></span>
+                        <div>
+                            <small>Download on the</small>
+                            <strong>App Store (iOS &amp; Mac)</strong>
+                        </div>
+                    </a>
+                    <a href="#google-play-store" id="linkGooglePlay" target="_blank" rel="noopener" class="store-badge-btn store-badge-primary">
+                        <span class="store-badge-icon">▶</span>
+                        <div>
+                            <small>Get it on</small>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="support-tip-box">
+                    <div>
+                        <strong>Using RPN Calculator on Desktop Web?</strong>
+                        <p>If this tool saves you time at work, you can support ongoing open-source development or install as a desktop PWA.</p>
+                    </div>
+                    <div class="support-tip-actions">
+                        <button id="installPwaBtn" class="ui-btn" style="display:none;">Install Desktop App</button>
+                        <a href="https://buymeacoffee.com" id="linkSupportTip" target="_blank" rel="noopener" class="ui-btn ui-btn-accent">☕ Buy Me a Coffee</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn-action ui-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. About & Keyboard Shortcuts Modal -->
+    <div id="aboutModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card modal-md">
+            <div class="modal-header">
+                <div>
+                    <h3 id="aboutModalTitle">About RPN Calculator</h3>
+                    <span class="modal-subtitle">Precision Reverse Polish Notation Scientific Instrument</span>
+                </div>
+                <button class="modal-close-btn" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px; font-size: 13px; line-height: 1.6;">
+                <p style="margin-bottom: 12px;">Designed for engineers, physicists, computer scientists, and financial analysts who think in postfix stack registers.</p>
+
+                <div class="shortcuts-grid">
+                    <div class="shortcut-row"><kbd>Enter</kbd> / <kbd>Space</kbd> <span>Push entry or duplicate X</span></div>
+                    <div class="shortcut-row"><kbd>⌘K</kbd> / <kbd>/</kbd> <span>Command &amp; Constants Palette</span></div>
+                    <div class="shortcut-row"><kbd>⌘Z</kbd> / <kbd>⌘Y</kbd> <span>Multi-level Undo / Redo</span></div>
+                    <div class="shortcut-row"><kbd>⌘L</kbd> <span>Interactive Calculation Tape</span></div>
+                    <div class="shortcut-row"><kbd>Backspace</kbd> <span>Delete digit or Drop X</span></div>
+                    <div class="shortcut-row"><kbd>Escape</kbd> <span>Clear All Stack (CLA)</span></div>
+                    <div class="shortcut-row"><kbd>F5</kbd> – <kbd>F8</kbd> <span>Base (Dec, Hex, Bin, Oct)</span></div>
+                    <div class="shortcut-row"><kbd>F9</kbd> – <kbd>F11</kbd> <span>Angle (Rad, Deg, Grad)</span></div>
+                </div>
+
+                <p style="margin-top: 12px;"><strong>Stack Direct Manipulation:</strong> Click any stack row to copy its value to your clipboard, or double-click any row to pull a copy directly into the <code>X:</code> register.</p>
+
+                <div class="about-promo-footer web-only-promo">
+                    <span>Want native physical haptics &amp; offline iOS/Mac/Android support?</span>
+                    <button class="ui-btn ui-btn-primary" data-menu-action="show-app-store">Get Native App</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn-action ui-btn ui-btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="calculator.js?v=7"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>
