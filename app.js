@@ -9,6 +9,7 @@
  */
 
 const MONETIZATION_CONFIG = {
+    enabled: false,
     iosAppStoreUrl: 'https://apps.apple.com/app/rpn-scientific-calculator/id0000000000',
     googlePlayUrl: 'https://play.google.com/store/apps/details?id=com.karlkue.rpncalc',
     supportTipUrl: 'https://buymeacoffee.com/karlkue',
@@ -56,6 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkIOS = document.getElementById('linkAppStoreIOS');
     const linkPlay = document.getElementById('linkGooglePlay');
     const linkTip = document.getElementById('linkSupportTip');
+    const getAppPromoBtn = document.getElementById('getAppPromoBtn');
+    if (!MONETIZATION_CONFIG.enabled && getAppPromoBtn) {
+        getAppPromoBtn.style.display = 'none';
+    }
     if (linkIOS) linkIOS.href = MONETIZATION_CONFIG.iosAppStoreUrl;
     if (linkPlay) linkPlay.href = MONETIZATION_CONFIG.googlePlayUrl;
     if (linkTip) linkTip.href = MONETIZATION_CONFIG.supportTipUrl;
@@ -475,9 +480,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function toggleEntrySign() {
+        let val = inputDisplay.value;
+        if (!val) return;
+        const eIdx = val.toUpperCase().indexOf('E');
+        if (eIdx !== -1 && engine.numberBase === 'DEC') {
+            const mantissa = val.slice(0, eIdx + 1);
+            const exp = val.slice(eIdx + 1);
+            if (exp.startsWith('-')) {
+                inputDisplay.value = mantissa + exp.slice(1);
+            } else if (exp.startsWith('+')) {
+                inputDisplay.value = mantissa + '-' + exp.slice(1);
+            } else {
+                inputDisplay.value = mantissa + '-' + exp;
+            }
+        } else {
+            if (val.startsWith('-')) {
+                inputDisplay.value = val.slice(1);
+            } else {
+                inputDisplay.value = '-' + val;
+            }
+        }
+    }
+
     function handleOperation(op) {
         triggerHaptic(op === 'ENTER' || op === 'CLA');
         const currentText = inputDisplay.value.trim();
+
+        // HP/RealCalc RPN: ± (CHS) edits entry in-place when typing
+        if (op === 'NEG' && currentText !== '' && !engine.isCommand(currentText)) {
+            toggleEntrySign();
+            return;
+        }
+
+        // HP/RealCalc RPN: Backspace deletes digit when typing, or drops X when empty
+        if (op === 'BACKSPACE') {
+            if (currentText !== '') {
+                inputDisplay.value = inputDisplay.value.slice(0, -1);
+                return;
+            }
+            op = 'DROP';
+        }
+
         let inputVal = null;
 
         if (currentText !== '') {
@@ -498,6 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const res = engine.executeOperation(op, inputVal);
         if (!res.success) {
+            if (inputVal !== null) {
+                inputDisplay.value = currentText;
+            }
             showStatus(res.error || 'Operation failed');
         } else if (op === 'UNDO') {
             showStatus('Undid last action');
@@ -510,13 +557,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendDigit(digit) {
         triggerHaptic();
         if (digit === 'EXP') {
-            if (!inputDisplay.value.toUpperCase().includes('E')) {
+            if (engine.numberBase === 'HEX') {
                 inputDisplay.value += 'E';
+            } else if (!inputDisplay.value.toUpperCase().includes('E')) {
+                inputDisplay.value += (inputDisplay.value === '' ? '1E' : 'E');
             }
         } else {
             inputDisplay.value += digit.toUpperCase();
         }
-        inputDisplay.focus();
+        if (window.innerWidth >= 600) {
+            inputDisplay.focus();
+        }
     }
 
     function setupResizeGrip() {

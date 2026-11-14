@@ -57,6 +57,13 @@ function runTests() {
         const divZero = engine.executeOperation('DIV');
         assert.strictEqual(divZero.success, false);
         assert.deepStrictEqual(engine.stack.items, [42, 0]);
+
+        // Inline inputVal on empty stack (e.g. typing "1" then "+")
+        const emptyEngine = new RPNCalculatorEngine();
+        const emptyAdd = emptyEngine.executeOperation('ADD', 1);
+        assert.strictEqual(emptyAdd.success, false);
+        assert.deepStrictEqual(emptyEngine.stack.items, []);
+
         console.log('✓ 3. Division-by-zero & domain error stack preservation');
     }
 
