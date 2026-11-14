@@ -85,9 +85,10 @@ class RPNCalculatorEngine {
 
         this.angleUnit = 'DEG'; // DEG, RAD, GRAD
         this.numberBase = 'DEC'; // DEC, HEX, BIN, OCT
-        this.displayType = 'Standard'; // Standard, Fixed, Scientific, Grouped
+        this.displayType = 'Standard'; // Standard, Fixed, Scientific, Engineering, Grouped
         this.decimalPlaces = 4;
         this.isHyperbolic = false;
+        this.registers = {}; // STO/RCL memory registers 0-9
 
         // Engineering & Physical Constants Catalog (CODATA / NIST)
         this.constantsCatalog = [
@@ -260,7 +261,8 @@ class RPNCalculatorEngine {
             angleUnit: this.angleUnit,
             numberBase: this.numberBase,
             displayType: this.displayType,
-            decimalPlaces: this.decimalPlaces
+            decimalPlaces: this.decimalPlaces,
+            registers: this.registers
         };
     }
 
@@ -292,11 +294,14 @@ class RPNCalculatorEngine {
         if (data.numberBase && ['DEC', 'HEX', 'BIN', 'OCT'].includes(data.numberBase)) {
             this.numberBase = data.numberBase;
         }
-        if (data.displayType && ['Standard', 'Fixed', 'Scientific', 'Grouped'].includes(data.displayType)) {
+        if (data.displayType && ['Standard', 'Fixed', 'Scientific', 'Engineering', 'Grouped'].includes(data.displayType)) {
             this.displayType = data.displayType;
         }
         if (typeof data.decimalPlaces === 'number' && data.decimalPlaces >= 0 && data.decimalPlaces <= 15) {
             this.decimalPlaces = data.decimalPlaces;
+        }
+        if (data.registers && typeof data.registers === 'object') {
+            this.registers = { ...data.registers };
         }
         return true;
     }
@@ -377,6 +382,15 @@ class RPNCalculatorEngine {
                 return num.toFixed(Math.max(0, Math.min(15, this.decimalPlaces)));
             case 'Scientific':
                 return num.toExponential(Math.max(0, Math.min(15, this.decimalPlaces))).toUpperCase();
+            case 'Engineering': {
+                if (num === 0) return (0).toFixed(Math.max(0, Math.min(15, this.decimalPlaces))) + 'E+0';
+                const exp = Math.floor(Math.log10(Math.abs(num)));
+                const engExp = Math.floor(exp / 3) * 3;
+                const mantissa = num / Math.pow(10, engExp);
+                const dp = Math.max(0, Math.min(15, this.decimalPlaces));
+                const sign = engExp >= 0 ? '+' : '';
+                return `${mantissa.toFixed(dp)}E${sign}${engExp}`;
+            }
             case 'Grouped': {
                 const rounded = this.cleanFloat(num);
                 const parts = rounded.toString().split('.');
@@ -911,8 +925,111 @@ class RPNCalculatorEngine {
                     return { success: true };
                 }
 
-                default:
+                case 'AND': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop() | 0;
+                    const y = this.stack.pop() | 0;
+                    result = (y & x) >>> 0;
+                    logName = 'AND'; operands = [y, x];
+                    break;
+                }
+                case 'OR': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop() | 0;
+                    const y = this.stack.pop() | 0;
+                    result = (y | x) >>> 0;
+                    logName = 'OR'; operands = [y, x];
+                    break;
+                }
+                case 'XOR': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop() | 0;
+                    const y = this.stack.pop() | 0;
+                    result = (y ^ x) >>> 0;
+                    logName = 'XOR'; operands = [y, x];
+                    break;
+                }
+                case 'NOT': {
+                    if (this.stack.count < 1) return abortAndRestore('Stack is empty');
+                    const x = this.stack.pop() | 0;
+                    result = (~x) >>> 0;
+                    logName = 'NOT'; operands = [x];
+                    break;
+                }
+                case 'SHL': {
+                    if (this.stack.count < 1) return abortAndRestore('Stack is empty');
+                    const x = this.stack.pop() | 0;
+                    result = (x << 1) >>> 0;
+                    logName = 'SHL'; operands = [x];
+                    break;
+                }
+                case 'SHR': {
+                    if (this.stack.count < 1) return abortAndRestore('Stack is empty');
+                    const x = this.stack.pop() | 0;
+                    result = x >>> 1;
+                    logName = 'SHR'; operands = [x];
+                    break;
+                }
+                case 'PCT': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop();
+                    const y = this.stack.peek();
+                    result = (y * x) / 100;
+                    logName = '%'; operands = [y, x];
+                    break;
+                }
+                case 'PCT_CHG': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop();
+                    const y = this.stack.peek();
+                    if (y === 0) return abortAndRestore('Division by zero');
+                    result = ((x - y) / y) * 100;
+                    logName = 'Δ%'; operands = [y, x];
+                    break;
+                }
+                case 'TO_POLAR': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const x = this.stack.pop();
+                    const y = this.stack.pop();
+                    const r = Math.hypot(x, y);
+                    const theta = this.fromRadians(Math.atan2(y, x));
+                    this.stack.push(theta);
+                    result = r;
+                    logName = '→P'; operands = [x, y];
+                    break;
+                }
+                case 'TO_RECT': {
+                    if (this.stack.count < 2) return abortAndRestore('Insufficient arguments on stack');
+                    const r = this.stack.pop();
+                    const theta = this.toRadians(this.stack.pop());
+                    const x = r * Math.cos(theta);
+                    const y = r * Math.sin(theta);
+                    this.stack.push(y);
+                    result = x;
+                    logName = '→R'; operands = [r, theta];
+                    break;
+                }
+                default: {
+                    const stoMatch = op.match(/^STO_?([0-9])$/);
+                    if (stoMatch) {
+                        if (this.stack.count < 1) return abortAndRestore('Stack is empty');
+                        const reg = stoMatch[1];
+                        this.registers[reg] = this.stack.peek();
+                        this.logOperation(`STO ${reg}`, [this.registers[reg]], null);
+                        return { success: true };
+                    }
+                    const rclMatch = op.match(/^RCL_?([0-9])$/);
+                    if (rclMatch) {
+                        const reg = rclMatch[1];
+                        if (typeof this.registers[reg] !== 'number') {
+                            return abortAndRestore(`Register R${reg} is empty`);
+                        }
+                        result = this.registers[reg];
+                        logName = `RCL ${reg}`; operands = [];
+                        break;
+                    }
                     return abortAndRestore(`Unknown operation: ${rawOp}`);
+                }
             }
         } finally {
             if (this.isHyperbolic && ['SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN', 'SINH', 'COSH', 'TANH', 'ASINH', 'ACOSH', 'ATANH'].includes(op)) {

@@ -117,6 +117,46 @@ function runTests() {
         console.log('✓ 5. Full state serialization (toJSON/fromJSON) & cross-session Undo');
     }
 
+    // 6. HP / RealCalc Features: ENG mode, STO/RCL, Bitwise, %, Polar/Rect
+    {
+        const engine = new RPNCalculatorEngine();
+
+        // Engineering display mode (exponents in multiples of 3)
+        engine.displayType = 'Engineering';
+        engine.decimalPlaces = 2;
+        assert.strictEqual(engine.formatNumber(12345), '12.35E+3');
+        assert.strictEqual(engine.formatNumber(0.00045), '450.00E-6');
+
+        // STO / RCL memory registers
+        engine.pushValue(42.5);
+        assert.strictEqual(engine.executeOperation('STO_3').success, true);
+        engine.executeOperation('CLA');
+        assert.strictEqual(engine.executeOperation('RCL_3').success, true);
+        assert.strictEqual(engine.stack.peek(), 42.5);
+
+        // Bitwise ops
+        engine.executeOperation('CLA');
+        engine.pushValue(0b1100);
+        engine.pushValue(0b1010);
+        engine.executeOperation('AND');
+        assert.strictEqual(engine.stack.peek(), 0b1000);
+
+        // Percentage (%)
+        engine.executeOperation('CLA');
+        engine.pushValue(200);
+        engine.pushValue(15);
+        engine.executeOperation('PCT');
+        assert.strictEqual(engine.stack.peek(), 30);
+
+        // Polar -> Rectangular -> Polar
+        engine.executeOperation('CLA');
+        engine.pushValue(4);
+        engine.pushValue(3);
+        engine.executeOperation('TO_POLAR');
+        assert.strictEqual(engine.stack.peek(), 5);
+        console.log('✓ 6. ENG display mode, STO/RCL registers, Bitwise, %, and Polar/Rect');
+    }
+
     console.log('\nALL TESTS PASSED SUCCESSFULLY!');
 }
 
